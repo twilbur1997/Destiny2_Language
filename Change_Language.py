@@ -73,9 +73,9 @@ def get_language():
     file_list_sp = [x for x in file_list if "sp" in x]
     num_sp = len(set(file_list_de) & set(file_list_audio))
 
-    print("\nEnglish: ", len(num_en))
-    print("German: ", len(num_de))
-    print("Spanish: ", len(num_sp))
+    print("\nEnglish: ", num_en)
+    print("German: ", num_de)
+    print("Spanish: ", num_sp)
 
     lang = get_max(num_en, num_de, num_sp)
     return lang
