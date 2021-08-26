@@ -32,7 +32,12 @@ Note: If this is not your path to the Destiny 2 packages, you should change line
 *If you need to exit the program at any point, just hold Control then press C*
 
 
+The recommended usage of this app is to change the language of the game on Steam to the audio language that you'd like.
+Then, save those files using the program.
 
+Then, set the language in Steam to the language you want for the UI.
+
+Finally, you can use the program to set the audio language to your preferred language. 
 
 
 
