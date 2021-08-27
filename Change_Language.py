@@ -38,6 +38,7 @@ Finally, you can use the program to set the audio language to your preferred lan
 '''
 
 def get_max(num_dict):
+    # TODO replace with comparing dict values instead of if statements
 
     if num_dict["en"] > num_dict["de"] and num_dict["en"] > num_dict["sp"]:
         lang_true = input("English is the current selected language. Is this true? (y/n): ")
@@ -67,21 +68,13 @@ def get_max(num_dict):
 def get_language():
     file_list = listdir(D2_packages)
     file_list_audio = [x for x in file_list if "audio" in x]
-    num_dict = {}
-
-    file_list_en = [x for x in file_list if "en" in x]
-    num_dict["en"] = len(set(file_list_en) & set(file_list_audio))
-
-    file_list_de = [x for x in file_list if "de" in x]
-    num_dict["de"] = len(set(file_list_de) & set(file_list_audio))
-
-    file_list_sp = [x for x in file_list if "sp" in x]
-    num_dict["sp"] = len(set(file_list_de) & set(file_list_audio))
 
     print("Found the following number of files for each language:")
-    print("\nEnglish: ", num_dict["en"])
-    print("German: ", num_dict["de"])
-    print("Spanish: ", num_dict["sp"])
+    for abrv in lang_dict.keys():
+        file_list_lang = [x for x in file_list if abrv in x]
+        num_dict[abrv] = len(set(file_list_lang) & set(file_list_audio))
+        print(abrv, " ", num_dict[abrv])
+
     print("\n")
 
     lang = get_max(num_dict)
