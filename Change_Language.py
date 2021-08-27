@@ -39,10 +39,8 @@ Finally, you can use the program to set the audio language to your preferred lan
 '''
 
 def get_max(num_dict):
-    # TODO replace with comparing dict values instead of if statements
-
-    #lang = max(num_dict.items(), key=itemgetter(1))[0]
-    #return lang
+    lang = max(num_dict.items(), key=itemgetter(1))[0]
+    return lang
 
     lang = input("Can't tell which language is being used, please enter one (en, de, sp): ")
     while lang not in lang_dict:
@@ -99,6 +97,7 @@ def create_language_backup():
     if not isdir(lang_dir):
         mkdir(lang_dir)
 
+    '''
     copy_wanted = input("\n\nWould you like to backup the current audio files? (y/n): ")
     count = 0
     skip_copy = False
@@ -111,26 +110,25 @@ def create_language_backup():
         if count>2:
             print("Invalid input 3 times in a row, exiting program")
             sys.exit()
+    '''
 
-    if not skip_copy:
-        print("You've chosen to backup the current audio files. \n")
-        # lang_selected = input("What language are you currently using? (en, de, sp):")
 
-        # Check which language the user currently has selected
-        selected_lang = get_language()
+    print("You've chosen to backup the current audio files. \n")
+    # lang_selected = input("What language are you currently using? (en, de, sp):")
 
-        # Copy the audio files over
-        chdir(lang_dir)
-        selected_lang_dir = lang_dict[selected_lang]+"_audio"
+    # Check which language the user currently has selected
+    selected_lang = get_language()
 
-        backup_audio_files(selected_lang_dir, selected_lang)
+    # Copy the audio files over
+    chdir(lang_dir)
+    selected_lang_dir = lang_dict[selected_lang]+"_audio"
 
+    backup_audio_files(selected_lang_dir, selected_lang)
 
     else:
-        print("\nSkipping backup step")
+        print("\nSkipping backup step...\n\nExiting program.\n")
 
-# TODO:
-# Copy the text files over
+
 def restore_language_backup():
     print("TODO")
 
