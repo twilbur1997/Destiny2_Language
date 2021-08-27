@@ -33,6 +33,7 @@ Then, set the language in Steam to the language you want for the UI.
 Finally, you can use the program to set the audio language to your preferred language.
 '''
 
+
 def get_lang_from_user():
     print("Please enter the language you are using (", end="")
     print_langs = ""
@@ -67,7 +68,6 @@ def get_max(num_dict):
         if "n" in confirm:
             print("Exiting program")
             sys.exit()
-
     return lang
 
 
@@ -115,22 +115,6 @@ def create_language_backup():
     chdir("..")
     if not isdir(lang_dir):
         mkdir(lang_dir)
-
-    '''
-    copy_wanted = input("\n\nWould you like to backup the current audio files? (y/n): ")
-    count = 0
-    skip_copy = False
-    while copy_wanted!="y":
-        if copy_wanted == "n":
-            skip_copy = True
-            break
-        copy_wanted = input("\nInvalid Response... \nWould you like to backup the current audio files? (y/n): ")
-        count +=1
-        if count>2:
-            print("Invalid input 3 times in a row, exiting program")
-            sys.exit()
-    '''
-
 
     print("You've chosen to backup the current audio files. \n")
     # selected_lang = input("What language are you currently using? (en, de, sp):")
