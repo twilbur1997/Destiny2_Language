@@ -37,47 +37,54 @@ Then, set the language in Steam to the language you want for the UI.
 Finally, you can use the program to set the audio language to your preferred language.
 '''
 
-def get_max(num_en, num_de, num_sp):
+def get_max(num_dict):
 
-    if num_en > num_de and num_en > num_sp:
+    if num_dict["en"] > num_dict["de"] and num_dict["en"] > num_dict["sp"]:
         lang_true = input("English is the current selected language. Is this true? (y/n): ")
         if lang_true == "y":
             return "en"
 
-    if num_de > num_en and num_de > num_sp:
+    if num_dict["de"] > num_dict["en"] and num_dict["de"] > num_dict["sp"]:
         lang_true = input("German is the current selected language. Is this true? (y/n): ")
         if lang_true == "y":
             return "de"
 
-    if num_sp > num_en and num_sp > num_de:
+    if num_dict["sp"] > num_dict["en"] and num_dict["sp"] > num_dict["de"]:
         lang_true = input("Spanish is the current selected language. Is this true? (y/n): ")
         if lang_true == "y":
             return "sp"
 
-    lang = input("Can't tell which language is being used, please enter one (en, de, sp):")
-    while lang != "en" or  lang != "de" or  lang != "sp":
-        lang = input("Invalid input, please enter the language abreviation (en, de, sp):")
+    lang = input("Can't tell which language is being used, please enter one (en, de, sp): ")
+    while lang not in lang_dict:
+        lang = input("Invalid input, please enter the language abreviation (en, de, sp): ")
+
+    if num_dict[lang] == 0:
+        confirm = input("No files were found for this language, are you sure that is your langauge? (y/n): ")
+
     return lang
 
 
 def get_language():
     file_list = listdir(D2_packages)
     file_list_audio = [x for x in file_list if "audio" in x]
+    num_dict = {}
 
     file_list_en = [x for x in file_list if "en" in x]
-    num_en = len(set(file_list_en) & set(file_list_audio))
+    num_dict["en"] = len(set(file_list_en) & set(file_list_audio))
 
     file_list_de = [x for x in file_list if "de" in x]
-    num_de = len(set(file_list_de) & set(file_list_audio))
+    num_dict["de"] = len(set(file_list_de) & set(file_list_audio))
 
     file_list_sp = [x for x in file_list if "sp" in x]
-    num_sp = len(set(file_list_de) & set(file_list_audio))
+    num_dict["sp"] = len(set(file_list_de) & set(file_list_audio))
 
-    print("\nEnglish: ", num_en)
-    print("German: ", num_de)
-    print("Spanish: ", num_sp)
+    print("Found the following number of files for each language:")
+    print("\nEnglish: ", num_dict["en"])
+    print("German: ", num_dict["de"])
+    print("Spanish: ", num_dict["sp"])
+    print("\n")
 
-    lang = get_max(num_en, num_de, num_sp)
+    lang = get_max(num_dict)
     return lang
 
 
@@ -87,10 +94,13 @@ def backup_audio_files(dir_name, lang_abrev):
     if not isdir(dir_name):
         mkdir(dir_name)
 
+    print(dir_name, lang_abrev)
+    print(getcwd())
+
     file_list = listdir(D2_packages)
-    file_list_de = [x for x in file_list if lang_abrev in x]
+    file_list_lang = [x for x in file_list if lang_abrev in x]
     file_list_audio = [x for x in file_list if "audio" in x]
-    file_set = set(file_list_de) & set(file_list_audio)
+    file_set = set(file_list_lang) & set(file_list_audio)
 
     pack_prefix = D2_packages+"\\" # Need to use double \ to escape just one
     lang_prefix = D2_packages.replace("packages", lang_dir)+"\\"+dir_name+"\\"
@@ -144,8 +154,10 @@ def restore_language_backup():
 
 
 def main():
-    print("Welcome to the Destiny 2 Local Language Changer!")
-    response = input("Would you like to: \n1. Backup current audio language \nor\n 2. Restore Audio")
+    print("\nWelcome to the Destiny 2 Local Language Changer!")
+    print("Would you like to: ")
+    print("1. Backup current audio language \nor")
+    response = input("2. Restore Audio\n")
 
     if "1" in response:
         create_language_backup()
