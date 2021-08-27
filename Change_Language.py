@@ -33,6 +33,24 @@ Then, set the language in Steam to the language you want for the UI.
 Finally, you can use the program to set the audio language to your preferred language.
 '''
 
+def get_lang_from_user():
+    print("Please enter the language you are using (", end="")
+    print_langs = ""
+    for abrv in lang_dict.keys():
+        print_langs = print_langs+abrv+", "
+    print(print_langs[:-2], end="")
+    lang = input("): ")
+
+    while lang not in lang_dict:
+        print_langs = ""
+        print("Invalid input, please enter the language abreviation (", end="")
+        for abrv in lang_dict.keys():
+            print_langs = print_langs+abrv+", "
+        print(print_langs[:-2], end="")
+        lang = input("): ")
+    return lang
+
+
 def get_max(num_dict):
     lang = max(num_dict.items(), key=itemgetter(1))[0]
 
@@ -41,16 +59,8 @@ def get_max(num_dict):
     if "y" in confirmed:
         return lang
 
-    print("Can't tell which language is being used, please enter one (", end="")
-    for abrv in lang_dict.keys():
-        print(abrv, ", ", end="")
-    lang = input("): ")
-
-    while lang not in lang_dict:
-        print("Invalid input, please enter the language abreviation (", end="")
-        for abrv in lang_dict.keys():
-            print(abrv, ", ", end="")
-        lang = input("): ")
+    print("Can't tell which language is being used...")
+    lang = get_lang_from_user()
 
     if num_dict[lang] == 0:
         confirm = input("No files were found for this language, are you sure that is your langauge? (y/n): ")
@@ -138,9 +148,6 @@ def create_language_backup():
 
 
 def restore_language_backup():
-    print("TODO")
-
-    chdir()
     chdir(D2_packages)
     chdir("..")
     if not isdir(lang_dir):
@@ -149,6 +156,9 @@ def restore_language_backup():
 
     # Look for english_audio,german_audio, spanish_audio
     file_list = listdir(lang_dir)
+
+    # Get language from user
+    lang = get_lang_from_user()
 
     # Rename existing files
 
@@ -160,7 +170,9 @@ def main():
     print("\nWelcome to the Destiny 2 Local Language Changer!")
     print("Would you like to: ")
     print("1. Backup current audio language \nor")
-    response = input("2. Restore Audio\n")
+    print("2. Restore Audio\nor")
+    print("3. Randomly Restore Audio\n")
+    response = input("\n")
 
     if "1" in response:
         create_language_backup()
@@ -168,6 +180,8 @@ def main():
     if "2" in response:
         restore_language_backup()
 
+    if "3" in response:
+        print("Coming soon, leave a comment if randomly assigning language is of interest")
 
 if __name__ == "__main__":
     main()
