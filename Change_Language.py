@@ -41,8 +41,8 @@ Finally, you can use the program to set the audio language to your preferred lan
 def get_max(num_dict):
     # TODO replace with comparing dict values instead of if statements
 
-    lang = max(num_dict.items(), key=itemgetter(1))[0]
-    return lang
+    #lang = max(num_dict.items(), key=itemgetter(1))[0]
+    #return lang
 
     lang = input("Can't tell which language is being used, please enter one (en, de, sp): ")
     while lang not in lang_dict:
@@ -57,6 +57,7 @@ def get_max(num_dict):
 def get_language():
     file_list = listdir(D2_packages)
     file_list_audio = [x for x in file_list if "audio" in x]
+    num_dict = {}
 
     print("Found the following number of files for each language:")
     for abrv in lang_dict.keys():
@@ -128,10 +129,25 @@ def create_language_backup():
     else:
         print("\nSkipping backup step")
 
-    # TODO:
-    # Copy the text files over
+# TODO:
+# Copy the text files over
 def restore_language_backup():
     print("TODO")
+
+    chdir()
+    chdir(D2_packages)
+    chdir("..")
+    if not isdir(lang_dir):
+        print("No language directory detected... Exiting.")
+        sys.exit()
+
+    # Look for english_audio,german_audio, spanish_audio
+    file_list = listdir(lang_dir)
+
+    # Rename existing files
+
+
+    # Copy files to package area in the Destiny 2 folder, overwriting existing ones
 
 
 def main():
