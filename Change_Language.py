@@ -18,11 +18,6 @@ lang_dict = {
 Thanks to others who have explored local language hacks with Destiny 2's files
 https://steamcommunity.com/app/1085660/discussions/0/1628539187763929500
 
-Download the latest Python here:
-https://www.python.org/downloads/
-
-C:\Program Files (x86)\Steam\steamapps\common\Destiny 2\packages
-
 
 Likely one program to create a backup of the current language,
 and another program to actually shift between established backups
@@ -40,14 +35,28 @@ Finally, you can use the program to set the audio language to your preferred lan
 
 def get_max(num_dict):
     lang = max(num_dict.items(), key=itemgetter(1))[0]
-    return lang
 
-    lang = input("Can't tell which language is being used, please enter one (en, de, sp): ")
+    print("It looks like this is your language: ", lang, "\n\nIs that correct?", end="")
+    confirmed = input(" (y/n): ")
+    if "y" in confirmed:
+        return lang
+
+    print("Can't tell which language is being used, please enter one (", end="")
+    for abrv in lang_dict.keys():
+        print(abrv, ", ", end="")
+    lang = input("): ")
+
     while lang not in lang_dict:
-        lang = input("Invalid input, please enter the language abreviation (en, de, sp): ")
+        print("Invalid input, please enter the language abreviation (", end="")
+        for abrv in lang_dict.keys():
+            print(abrv, ", ", end="")
+        lang = input("): ")
 
     if num_dict[lang] == 0:
         confirm = input("No files were found for this language, are you sure that is your langauge? (y/n): ")
+        if "n" in confirm:
+            print("Exiting program")
+            sys.exit()
 
     return lang
 
@@ -114,7 +123,7 @@ def create_language_backup():
 
 
     print("You've chosen to backup the current audio files. \n")
-    # lang_selected = input("What language are you currently using? (en, de, sp):")
+    # selected_lang = input("What language are you currently using? (en, de, sp):")
 
     # Check which language the user currently has selected
     selected_lang = get_language()
@@ -125,8 +134,7 @@ def create_language_backup():
 
     backup_audio_files(selected_lang_dir, selected_lang)
 
-    else:
-        print("\nSkipping backup step...\n\nExiting program.\n")
+    print("\nSkipping backup step...\n\nExiting program.\n")
 
 
 def restore_language_backup():
