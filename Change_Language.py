@@ -1,6 +1,7 @@
 from os import listdir, mkdir, getcwd, chdir
 from os.path import join, isfile, exists, isdir
 from shutil import copy2
+from operator import itemgetter
 
 
 D2_packages = "C:\Program Files (x86)\Steam\steamapps\common\Destiny 2\packages"
@@ -40,20 +41,8 @@ Finally, you can use the program to set the audio language to your preferred lan
 def get_max(num_dict):
     # TODO replace with comparing dict values instead of if statements
 
-    if num_dict["en"] > num_dict["de"] and num_dict["en"] > num_dict["sp"]:
-        lang_true = input("English is the current selected language. Is this true? (y/n): ")
-        if lang_true == "y":
-            return "en"
-
-    if num_dict["de"] > num_dict["en"] and num_dict["de"] > num_dict["sp"]:
-        lang_true = input("German is the current selected language. Is this true? (y/n): ")
-        if lang_true == "y":
-            return "de"
-
-    if num_dict["sp"] > num_dict["en"] and num_dict["sp"] > num_dict["de"]:
-        lang_true = input("Spanish is the current selected language. Is this true? (y/n): ")
-        if lang_true == "y":
-            return "sp"
+    lang = max(num_dict.items(), key=itemgetter(1))[0]
+    return lang
 
     lang = input("Can't tell which language is being used, please enter one (en, de, sp): ")
     while lang not in lang_dict:
@@ -74,7 +63,6 @@ def get_language():
         file_list_lang = [x for x in file_list if abrv in x]
         num_dict[abrv] = len(set(file_list_lang) & set(file_list_audio))
         print(abrv, " ", num_dict[abrv])
-
     print("\n")
 
     lang = get_max(num_dict)
