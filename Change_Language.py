@@ -1,4 +1,4 @@
-from os import listdir, mkdir, getcwd, chdir
+from os import listdir, mkdir, getcwd, chdir, rename
 from os.path import join, isfile, exists, isdir
 from shutil import copy2
 from operator import itemgetter
@@ -8,9 +8,19 @@ D2_packages = "C:\Program Files (x86)\Steam\steamapps\common\Destiny 2\packages"
 lang_dir = "languages"
 
 lang_dict = {
-    "en":"english",
-    "de": "german",
-    "sp": "spanish"
+    "en":"english",  # 42 files x
+    "fr": "french",  # 43 files x
+    "de": "german",  # 43 files x
+    "it": "italian",  # 45 files x
+    "jpn": "japanese",  # 44 files x
+    "pt": "br_portuguese",  # 43 files
+    "sp": "sp_spanish",  # 44 files x
+    "ru": "russian",  # 43 files x
+    "po": "polish",  # 43 files x
+    "cs": "sim_chinese",  # 31 files x
+    "ct": "tra_chinese",  # 31 files x
+    "mx": "mx_spanish",  # 43 files x
+    "ko": "korean"  # 43 files
 }
 
 
@@ -33,9 +43,14 @@ Then, set the language in Steam to the language you want for the UI.
 Finally, you can use the program to set the audio language to your preferred language.
 '''
 
+def no_files_found_warning():
+    confirm = input("No files were found for this language, are you sure that is your langauge? (y/n): ")
+    if "n" in confirm:
+        print("Exiting program")
+        exit()
+
 
 def get_lang_from_user():
-    print("Please enter the language you are using (", end="")
     print_langs = ""
     for abrv in lang_dict.keys():
         print_langs = print_langs+abrv+", "
@@ -53,6 +68,7 @@ def get_lang_from_user():
 
 
 def get_max(num_dict):
+    num_dict["en"] = num_dict["en"] - 20
     lang = max(num_dict.items(), key=itemgetter(1))[0]
 
     print("It looks like this is your language: ", lang, "\n\nIs that correct?", end="")
@@ -61,13 +77,11 @@ def get_max(num_dict):
         return lang
 
     print("Can't tell which language is being used...")
+    print("Please enter the language you are using (", end="")
     lang = get_lang_from_user()
 
     if num_dict[lang] == 0:
-        confirm = input("No files were found for this language, are you sure that is your langauge? (y/n): ")
-        if "n" in confirm:
-            print("Exiting program")
-            sys.exit()
+        no_files_found_warning()
     return lang
 
 
@@ -87,6 +101,7 @@ def get_language():
     return lang
 
 
+# Copies over all files with the language abreviation as well as audio in the name
 def backup_audio_files(dir_name, lang_abrev):
     print("\nCreating Language Backup...\n\nThis may take up to 10 seconds...\n\n\n")
 
@@ -117,7 +132,6 @@ def create_language_backup():
         mkdir(lang_dir)
 
     print("You've chosen to backup the current audio files. \n")
-    # selected_lang = input("What language are you currently using? (en, de, sp):")
 
     # Check which language the user currently has selected
     selected_lang = get_language()
@@ -128,26 +142,38 @@ def create_language_backup():
 
     backup_audio_files(selected_lang_dir, selected_lang)
 
-    print("\nSkipping backup step...\n\nExiting program.\n")
-
 
 def restore_language_backup():
     chdir(D2_packages)
     chdir("..")
     if not isdir(lang_dir):
         print("No language directory detected... Exiting.")
-        sys.exit()
+        exit()
 
-    # Look for english_audio,german_audio, spanish_audio
-    file_list = listdir(lang_dir)
+    # Look for majority language in packages
+    get_language()
 
     # Get language from user
+    print("Please enter the language you want to hear (", end="")
     lang = get_lang_from_user()
+    lang_sel_dir = lang_dict[lang]+"_audio"
 
-    # Rename existing files
+    chdir(lang_dir)
+    file_list = listdir(lang_sel_dir)
+    if len(file_list) == 0:
+        no_files_found_warning()
+
+    for file_name in file_list:
+        print(file_name)
+        # new_name = file_name.replace()
+        # rename(old_name, new_name)
 
 
     # Copy files to package area in the Destiny 2 folder, overwriting existing ones
+
+
+    # Change name of existing files back (idempotency go brrrrr)
+
 
 
 def main():
@@ -156,6 +182,7 @@ def main():
     print("1. Backup current audio language \nor")
     print("2. Restore Audio\nor")
     print("3. Randomly Restore Audio\n")
+    print("5. Compare Audio files that have been saved\n")
     response = input("\n")
 
     if "1" in response:
@@ -166,6 +193,14 @@ def main():
 
     if "3" in response:
         print("Coming soon, leave a comment if randomly assigning language is of interest")
+
+    if "5" in response:
+        langs = D2_packages.replace("packages", lang_dir)
+        for dir in listdir(langs):
+            for file in listdir(langs+"\\"+dir):
+                print(file)
+            print("\n")
+
 
 if __name__ == "__main__":
     main()
