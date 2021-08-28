@@ -248,7 +248,7 @@ def main():
                     print_string = print_string+file_here+" "
 
             print_string = print_string+"\n"
-            print(print_string)
+        print(print_string)
 
 if __name__ == "__main__":
     main()
