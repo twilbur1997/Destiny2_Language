@@ -1,7 +1,9 @@
-# Destiny 2 Language Changer
+#Destiny 2 Language Changer
 
 You're here because you don't want to toggle the Steam settings every time to change between languages.
 It requires a download every time, and simply deletes the local files instead of  moving them around for some reason.
+
+#NOTE: Destiny has a strict policy regarding tampering with local files. If you use this software, you do so AT YOUR OWN RISK. 
 
 Heads up - this program only changes the audio, and doesn't change subtitles or the user interface.
 
@@ -37,7 +39,7 @@ Then, save those files using the program.
 
 Then, set the language in Steam to the language you want for the UI.
 
-Finally, you can use the program to set the audio language to your preferred language. 
+Finally, you can use the program to set the audio language to your preferred language.
 
 
 
