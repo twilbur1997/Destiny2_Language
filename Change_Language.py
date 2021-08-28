@@ -192,9 +192,104 @@ def get_abrv(dir_name):
 
     for key, value in lang_dict.items():
         if(value == dir_name):
-             return key
+            return key
     print("Language abreviation not found. Exiting...")
     exit()
+
+
+def audio_compatible(interface_lang, audio_lang):
+    interface_lang_dir = lang_dict[interface_lang]+"_audio"
+    audio_lang_dir = lang_dict[audio_lang]+"_audio"
+
+    langs = D2_packages.replace("packages", lang_dir)
+
+    interface_lang_list = listdir(interface_lang_dir)
+    audio_lang_list = listdir(audio_lang_dir)
+
+    for file in interface_lang_list:
+        if file not in audio_lang_list:
+            return False
+    return True
+
+
+def language_compatability():
+    lang_prefix = D2_packages.replace("packages", lang_dir)+"\\"
+    chdir(lang_prefix)
+    print("Printing Interface Language Compatability")
+    langs = listdir(D2_packages.replace("packages", lang_dir))
+
+    print("\n\nTop is the Interface Language, Left is the Audio\n")
+    print_string = ""
+    title_string = " "*4
+    lang_compat_dict = {}
+    for interface_lang in langs:
+        interface_abrv = get_abrv(interface_lang)
+        print_string = print_string+interface_abrv+"  "
+        lang_compat_dict[interface_abrv] = []
+        for audio_lang in langs:
+            if interface_lang == audio_lang:
+                while len(interface_abrv)<4:
+                    interface_abrv = interface_abrv +" "
+                title_string = title_string+interface_abrv
+                print_string = print_string+" "*3
+                continue
+
+            audio_abrv = get_abrv(audio_lang)
+            if audio_compatible(interface_abrv.strip(), audio_abrv.strip()):
+                lang_compat_dict[interface_abrv].append(audio_abrv)
+                print_string = print_string+"  X"
+        print_string = print_string+"\n"
+    print(title_string)
+    print(print_string)
+
+    print("\n\n", lang_compat_dict)
+
+
+def language_matrix():
+    print("Printing Laguage Matrix")
+    langs = D2_packages.replace("packages", lang_dir)
+    all_files = []
+    lang_files = {}
+    print_string = " "*15
+
+    for dir in listdir(langs):
+        abrv = get_abrv(dir)
+        lang = abrv
+        while len(lang) < 4:
+            lang = " "+lang
+        lang_files[abrv] = []
+        for file in listdir(langs+"\\"+dir):
+            file = file.replace(abrv, "")
+            file = file.replace("w64_sr_audio_", "")
+            if file not in all_files:
+                all_files.append(file)
+            lang_files[abrv].append(file)
+
+    print_string = ""
+    title_string = None
+    title_part = " "*17
+    for count, file in enumerate(all_files):
+        file_name = all_files[count]
+        if count <10:
+            count = str(count)+" "
+        else:
+            count = str(count)
+        stuff = count+". "+str(file_name)
+        print_string = print_string+stuff
+        for abrv, lang_dirs in lang_files.items():
+
+            file_here = "   "
+            if file_name in lang_dirs:
+                file_here = "  X"
+                if not title_string:
+                    while len(abrv) <4:
+                        abrv = abrv +" "
+                    title_part = title_part+abrv+""
+            print_string = print_string+file_here+" "
+        title_string = title_part
+        print_string = print_string+"\n"
+    print(title_string)
+    print(print_string)
 
 
 def main():
@@ -203,6 +298,7 @@ def main():
     print("1. Backup current audio language \nor")
     print("2. Restore Audio\nor")
     print("3. Randomly Restore Audio\n")
+    print("4. Show Audio Compatability\n")
     print("5. Show Audio file Matrix\n")
     response = input("\n")
 
@@ -215,40 +311,12 @@ def main():
     if "3" in response:
         print("Coming soon, leave a comment in the GitHub if randomly assigning language is of interest")
 
+    if "4" in response:
+        language_compatability()
+
     if "5" in response:
-        print("Printing Laguage Matrix")
-        langs = D2_packages.replace("packages", lang_dir)
-        all_files = []
-        lang_files = []
-        print_string = ""
+        language_matrix()
 
-        for dir in listdir(langs):
-            abrv = get_abrv(dir)
-            lang = abrv
-            while len(lang) < 4:
-                lang = " "+lang
-            print_string = print_string+lang
-            this_lang = []
-            for file in listdir(langs+"\\"+dir):
-                file = file.replace(abrv, "lang")
-                if file not in all_files:
-                    all_files.append(file)
-                this_lang.append(file)
-            lang_files.append(this_lang)
-        print(print_string)
-
-        print_string = ""
-        for count, file in enumerate(all_files):
-            stuff = str(count)+". "+str(all_files[count])
-            print_string = print_string+stuff
-            for lang in lang_files:
-                file_here = "    "
-                if all_files[count] in lang:
-                    file_here = "  X "
-                    print_string = print_string+file_here+" "
-
-            print_string = print_string+"\n"
-        print(print_string)
 
 if __name__ == "__main__":
     main()
